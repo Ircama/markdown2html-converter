@@ -8,10 +8,10 @@ pub const APP_NAME: &str = "Markdown to HTML Converter";
 pub const CARGO_PKG_VERSION: &str = env!("CARGO_PKG_VERSION");
 const CARGO_PKG_AUTHORS: &str = env!("CARGO_PKG_AUTHORS");
 
-const AFTER_HELP: &str = "Enjoy it! https://magiclen.org";
+const AFTER_HELP: &str = "Enjoy it!";
 
 const APP_ABOUT: &str = concat!(
-    "A simple tool for converting Simple Chinese to Traditional Chinese(TW).\n\nEXAMPLES:\n",
+    "A tool for converting markdown to html.\n\nEXAMPLES:\n",
     concat_line!(prefix "markdown2html-converter ",
         "/path/to/file.md                           # Convert /path/to/file.md to /path/to/file.html, titled \"file\"",
         "/path/to/file.md -o /path/to/output.html   # Convert /path/to/file.md to /path/to/output.html, titled \"output\"",
