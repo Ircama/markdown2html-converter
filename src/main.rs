@@ -18,6 +18,7 @@ lazy_static_include_str! {
     MATH_JAX => "resources/mathjax.min.js",
     MATH_JAX_CONFIG => "resources/mathjax-config.js",
     HIGHLIGHT => "resources/highlight.min.js",
+    MERMAID_CONFIG => "resources/mermaid.min.js",
 }
 
 fn main() -> anyhow::Result<()> {
@@ -141,6 +142,14 @@ fn main() -> anyhow::Result<()> {
         }
     };
 
+    let has_mermaid = {
+        if args.no_highlight {
+            false
+        } else {
+            markdown_html.contains("<code class=\"language-mermaid\">")
+        }
+    };
+
     let has_mathjax = {
         if args.no_mathjax {
             false
@@ -222,6 +231,20 @@ fn main() -> anyhow::Result<()> {
     html_minifier.digest("<article class=\"markdown-body\">").unwrap();
     html_minifier.digest(&markdown_html).unwrap();
     html_minifier.digest("</article>").unwrap();
+
+    if has_mermaid {
+        html_minifier.digest("<script>").unwrap();
+        unsafe {
+            html_minifier.indigest(*MERMAID_CONFIG);
+        }
+        html_minifier.digest("
+            document.querySelectorAll('code[class^=\"language-mermaid\"]').forEach(function(element) {
+                var c = element.getAttribute('class');
+                element.setAttribute('class', c.replace(/language-mermaid/g, 'mermaid'));
+            });
+            mermaid.initialize({startOnLoad: true});
+        </script>").unwrap();
+    }
 
     if !args.no_cjk_fonts {
         html_minifier.digest("<script>").unwrap();
